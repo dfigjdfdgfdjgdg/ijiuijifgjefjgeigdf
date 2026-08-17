@@ -21,7 +21,6 @@
             padding-bottom: 100px;
         }
 
-        /* ===== ХЕДЕР С АВАТАРКОЙ ===== */
         .header {
             display: flex;
             align-items: center;
@@ -65,7 +64,6 @@
             margin-top: 2px;
         }
 
-        /* ===== ВКЛАДКИ ===== */
         .tabs {
             display: flex;
             gap: 10px;
@@ -99,13 +97,6 @@
             color: white;
         }
 
-        .tab .tab-icon {
-            font-size: 20px;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        /* ===== КОНТЕНТ ВКЛАДОК ===== */
         .tab-content {
             display: none;
             animation: fadeIn 0.3s ease;
@@ -126,7 +117,6 @@
             }
         }
 
-        /* ===== ПРОМПТ ===== */
         .prompt-section {
             background: #141414;
             border-radius: 16px;
@@ -191,7 +181,6 @@
             transform: none;
         }
 
-        /* ===== ТОСТ ===== */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -217,13 +206,6 @@
             opacity: 1;
         }
 
-        .toast .toast-icon {
-            font-size: 24px;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        /* ===== СКРОЛЛ ===== */
         ::-webkit-scrollbar {
             width: 4px;
         }
@@ -237,7 +219,6 @@
             border-radius: 10px;
         }
 
-        /* ===== АДАПТИВ ===== */
         @media (max-width: 480px) {
             body {
                 padding: 14px;
@@ -246,9 +227,6 @@
             .tab {
                 font-size: 12px;
                 padding: 10px 6px;
-            }
-            .tab .tab-icon {
-                font-size: 18px;
             }
             .prompt-input {
                 min-height: 100px;
@@ -263,32 +241,26 @@
     </style>
 </head>
 <body>
-    <!-- ===== ХЕДЕР ===== -->
     <div class="header">
         <div class="avatar" id="avatarDisplay">👤</div>
         <div class="user-info">
             <h1 id="userName">Добро пожаловать!</h1>
-            <p>UnSkippable Generator</p>
+            <p>AI Генератор</p>
         </div>
     </div>
 
-    <!-- ===== ВКЛАДКИ ===== -->
     <div class="tabs">
         <button class="tab active" data-tab="avatar">
-            <span class="tab-icon">👤</span>
             Аватар
         </button>
         <button class="tab" data-tab="preview">
-            <span class="tab-icon">🖼️</span>
             Превью
         </button>
         <button class="tab" data-tab="cards">
-            <span class="tab-icon">📇</span>
             Карточки
         </button>
     </div>
 
-    <!-- ===== ВКЛАДКА: АВАТАР ===== -->
     <div class="tab-content active" id="tab-avatar">
         <div class="prompt-section">
             <label>Опиши аватар (промпт)</label>
@@ -297,7 +269,6 @@
         </div>
     </div>
 
-    <!-- ===== ВКЛАДКА: ПРЕВЬЮ ===== -->
     <div class="tab-content" id="tab-preview">
         <div class="prompt-section">
             <label>Опиши изображение (промпт)</label>
@@ -306,7 +277,6 @@
         </div>
     </div>
 
-    <!-- ===== ВКЛАДКА: КАРТОЧКИ ===== -->
     <div class="tab-content" id="tab-cards">
         <div class="prompt-section">
             <label>Опиши карточку (промпт)</label>
@@ -315,16 +285,11 @@
         </div>
     </div>
 
-    <!-- ===== TOAST ===== -->
     <div class="toast" id="toast">
-        <span class="toast-icon">✅</span>
         <span id="toastMessage">Результат отправлен в ЛС!</span>
     </div>
 
     <script>
-        // ================================================================
-        // 1. TELEGRAM ИНИЦИАЛИЗАЦИЯ
-        // ================================================================
         const tg = window.Telegram?.WebApp;
 
         if (tg) {
@@ -332,9 +297,6 @@
             tg.expand();
         }
 
-        // ================================================================
-        // 2. ДАННЫЕ ПОЛЬЗОВАТЕЛЯ
-        // ================================================================
         const user = tg?.initDataUnsafe?.user;
         const userName = user?.first_name || user?.username || 'Гость';
         const userId = user?.id || 'неизвестно';
@@ -345,9 +307,6 @@
         const initials = userName.charAt(0).toUpperCase() || '👤';
         avatarDisplay.textContent = initials;
 
-        // ================================================================
-        // 3. ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
-        // ================================================================
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', function() {
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -359,67 +318,54 @@
             });
         });
 
-        // ================================================================
-        // 4. ГЕНЕРАЦИЯ И ОТПРАВКА В ЛС
-        // ================================================================
         function generateImage(type) {
             let prompt = '';
             let typeName = '';
 
             if (type === 'avatar') {
                 prompt = document.getElementById('avatarPrompt').value.trim();
-                typeName = '👤 Аватар';
+                typeName = 'Аватар';
                 if (!prompt) {
-                    showToast('⚠️ Введите описание аватара!');
+                    showToast('Введите описание аватара!');
                     document.getElementById('avatarPrompt').focus();
                     return;
                 }
             } else if (type === 'preview') {
                 prompt = document.getElementById('previewPrompt').value.trim();
-                typeName = '🖼️ Превью';
+                typeName = 'Превью';
                 if (!prompt) {
-                    showToast('⚠️ Введите описание изображения!');
+                    showToast('Введите описание изображения!');
                     document.getElementById('previewPrompt').focus();
                     return;
                 }
             } else if (type === 'card') {
                 prompt = document.getElementById('cardPrompt').value.trim();
-                typeName = '📇 Карточка';
+                typeName = 'Карточка';
                 if (!prompt) {
-                    showToast('⚠️ Введите описание карточки!');
+                    showToast('Введите описание карточки!');
                     document.getElementById('cardPrompt').focus();
                     return;
                 }
             }
 
-            // Находим кнопку в текущей вкладке
             const btn = document.querySelector(`#tab-${type} .btn-generate`);
             if (btn) {
-                btn.textContent = '⏳ Генерация...';
+                btn.textContent = 'Генерация...';
                 btn.disabled = true;
             }
 
             setTimeout(() => {
                 if (tg) {
-                    tg.sendData(JSON.stringify({
-                        action: 'generate',
-                        type: type,
-                        typeName: typeName,
-                        prompt: prompt,
-                        user: userName,
-                        userId: userId,
-                        timestamp: new Date().toISOString()
-                    }));
+                    tg.sendData("1");
                 }
 
-                showToast('✅ Результат отправлен в ЛС!');
+                showToast('Результат отправлен в ЛС!');
 
                 if (btn) {
                     btn.textContent = `Сгенерировать ${type === 'avatar' ? 'аватар' : type === 'preview' ? 'превью' : 'карточку'}`;
                     btn.disabled = false;
                 }
 
-                // Очищаем поле
                 if (type === 'avatar') document.getElementById('avatarPrompt').value = '';
                 else if (type === 'preview') document.getElementById('previewPrompt').value = '';
                 else if (type === 'card') document.getElementById('cardPrompt').value = '';
@@ -427,9 +373,6 @@
             }, 1500);
         }
 
-        // ================================================================
-        // 5. TOAST
-        // ================================================================
         let toastTimeout;
 
         function showToast(message) {
@@ -444,9 +387,6 @@
             }, 3000);
         }
 
-        // ================================================================
-        // 6. ENTER ДЛЯ ОТПРАВКИ
-        // ================================================================
         document.querySelectorAll('.prompt-input').forEach(input => {
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
@@ -458,11 +398,8 @@
             });
         });
 
-        // ================================================================
-        // 7. ПРИВЕТСТВИЕ
-        // ================================================================
         setTimeout(() => {
-            showToast(`👋 Добро пожаловать, ${userName}!`);
+            showToast(`Добро пожаловать, ${userName}!`);
         }, 500);
     </script>
 </body>
