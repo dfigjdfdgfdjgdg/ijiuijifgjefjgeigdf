@@ -46,13 +46,6 @@
             box-shadow: 0 0 20px rgba(108, 92, 231, 0.3);
         }
 
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
         .user-info {
             flex: 1;
         }
@@ -133,197 +126,25 @@
             }
         }
 
-        /* ===== АВАТАР (вкладка) ===== */
-        .avatar-options {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .avatar-option {
-            aspect-ratio: 1;
-            border-radius: 16px;
-            background: #141414;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .avatar-option:hover {
-            border-color: #6c5ce7;
-            transform: scale(1.02);
-        }
-
-        .avatar-option.selected {
-            border-color: #6c5ce7;
-            box-shadow: 0 0 20px rgba(108, 92, 231, 0.3);
-        }
-
-        .avatar-option .check {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: #6c5ce7;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            display: none;
-        }
-
-        .avatar-option.selected .check {
-            display: flex;
-        }
-
-        .avatar-option img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* ===== ПРЕВЬЮ ===== */
-        .preview-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .preview-item {
-            aspect-ratio: 1;
-            border-radius: 16px;
-            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
-            border: 1px solid #1a1a1a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: #444;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .preview-item:hover {
-            border-color: #6c5ce7;
-            transform: scale(1.02);
-        }
-
-        .preview-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .preview-item .overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 12px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
-            font-size: 12px;
-            color: white;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .preview-item:hover .overlay {
-            opacity: 1;
-        }
-
-        .preview-item .badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: #6c5ce7;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 600;
-            color: white;
-        }
-
-        /* ===== КАРТОЧКИ ===== */
-        .card-item {
-            background: #141414;
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border: 1px solid #1a1a1a;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .card-item:hover {
-            border-color: #6c5ce7;
-            transform: translateX(4px);
-        }
-
-        .card-item .card-icon {
-            font-size: 32px;
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            background: #1a1a1a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .card-item .card-info {
-            flex: 1;
-        }
-
-        .card-item .card-info h4 {
-            font-size: 15px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .card-item .card-info p {
-            font-size: 12px;
-            color: #888;
-        }
-
-        .card-item .card-arrow {
-            color: #444;
-            font-size: 18px;
-        }
-
         /* ===== ПРОМПТ ===== */
         .prompt-section {
-            margin-top: 16px;
             background: #141414;
             border-radius: 16px;
-            padding: 16px;
+            padding: 20px;
             border: 1px solid #1a1a1a;
         }
 
         .prompt-section label {
-            font-size: 13px;
+            font-size: 14px;
             color: #888;
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            font-weight: 500;
         }
 
         .prompt-input {
             width: 100%;
-            padding: 14px 16px;
+            padding: 16px;
             background: #0a0a0a;
             border: 1px solid #1a1a1a;
             border-radius: 12px;
@@ -332,8 +153,9 @@
             outline: none;
             transition: border 0.3s;
             resize: vertical;
-            min-height: 80px;
+            min-height: 120px;
             font-family: inherit;
+            line-height: 1.6;
         }
 
         .prompt-input:focus {
@@ -346,16 +168,16 @@
 
         .btn-generate {
             width: 100%;
-            padding: 16px;
+            padding: 18px;
             background: linear-gradient(135deg, #6c5ce7, #0984e3);
             border: none;
             border-radius: 12px;
             color: white;
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
-            margin-top: 12px;
+            margin-top: 16px;
         }
 
         .btn-generate:hover {
@@ -366,9 +188,10 @@
         .btn-generate:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none;
         }
 
-        /* ===== СООБЩЕНИЕ ОБ ОТПРАВКЕ ===== */
+        /* ===== ТОСТ ===== */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -385,6 +208,8 @@
             opacity: 0;
             transition: all 0.4s;
             z-index: 1000;
+            max-width: 400px;
+            margin: 0 auto;
         }
 
         .toast.show {
@@ -418,20 +243,21 @@
                 padding: 14px;
                 padding-bottom: 90px;
             }
-            .avatar-options {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 10px;
-            }
-            .preview-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-            }
             .tab {
                 font-size: 12px;
                 padding: 10px 6px;
             }
             .tab .tab-icon {
                 font-size: 18px;
+            }
+            .prompt-input {
+                min-height: 100px;
+                font-size: 14px;
+                padding: 14px;
+            }
+            .btn-generate {
+                font-size: 15px;
+                padding: 16px;
             }
         }
     </style>
@@ -442,7 +268,7 @@
         <div class="avatar" id="avatarDisplay">👤</div>
         <div class="user-info">
             <h1 id="userName">Добро пожаловать!</h1>
-            <p>UnSkippable Generator</p>
+            <p>✨ AI Генератор</p>
         </div>
     </div>
 
@@ -464,36 +290,27 @@
 
     <!-- ===== ВКЛАДКА: АВАТАР ===== -->
     <div class="tab-content active" id="tab-avatar">
-        <div class="avatar-options" id="avatarOptions">
-            <!-- Генерируется JS -->
-        </div>
         <div class="prompt-section">
             <label>📝 Опиши аватар (промпт)</label>
-            <textarea class="prompt-input" id="avatarPrompt" placeholder="Например: красивый закат на пляже, стиль арт..."></textarea>
+            <textarea class="prompt-input" id="avatarPrompt" placeholder="Например: красивый закат на пляже, стиль арт, 4k..."></textarea>
             <button class="btn-generate" onclick="generateImage('avatar')">🚀 Сгенерировать аватар</button>
         </div>
     </div>
 
     <!-- ===== ВКЛАДКА: ПРЕВЬЮ ===== -->
     <div class="tab-content" id="tab-preview">
-        <div class="preview-grid" id="previewGrid">
-            <!-- Генерируется JS -->
-        </div>
-        <div class="prompt-section" style="margin-top: 16px;">
+        <div class="prompt-section">
             <label>📝 Опиши изображение (промпт)</label>
-            <textarea class="prompt-input" id="previewPrompt" placeholder="Например: космический корабль в стиле киберпанк..."></textarea>
+            <textarea class="prompt-input" id="previewPrompt" placeholder="Например: космический корабль в стиле киберпанк, 4k..."></textarea>
             <button class="btn-generate" onclick="generateImage('preview')">🚀 Сгенерировать превью</button>
         </div>
     </div>
 
     <!-- ===== ВКЛАДКА: КАРТОЧКИ ===== -->
     <div class="tab-content" id="tab-cards">
-        <div id="cardsList">
-            <!-- Генерируется JS -->
-        </div>
         <div class="prompt-section">
             <label>📝 Опиши карточку (промпт)</label>
-            <textarea class="prompt-input" id="cardPrompt" placeholder="Например: визитка для бизнеса, минимализм..."></textarea>
+            <textarea class="prompt-input" id="cardPrompt" placeholder="Например: визитка для бизнеса, минимализм, элегантно..."></textarea>
             <button class="btn-generate" onclick="generateImage('card')">🚀 Сгенерировать карточку</button>
         </div>
     </div>
@@ -522,116 +339,14 @@
         const userName = user?.first_name || user?.username || 'Гость';
         const userId = user?.id || 'неизвестно';
 
-        // Отображаем имя
         document.getElementById('userName').textContent = `Добро пожаловать, ${userName}!`;
 
-        // Аватарка (инициалы)
         const avatarDisplay = document.getElementById('avatarDisplay');
         const initials = userName.charAt(0).toUpperCase() || '👤';
         avatarDisplay.textContent = initials;
 
         // ================================================================
-        // 3. ДАННЫЕ ДЛЯ ВКЛАДОК
-        // ================================================================
-
-        // Аватары (пресеты)
-        const avatars = [
-            { emoji: '🧑‍💼', name: 'Бизнес' },
-            { emoji: '👩‍🎨', name: 'Креатив' },
-            { emoji: '🧑‍🚀', name: 'Космос' },
-            { emoji: '👨‍🍳', name: 'Кулинар' },
-            { emoji: '🧑‍🏫', name: 'Образование' },
-            { emoji: '👩‍💻', name: 'IT' }
-        ];
-
-        // Превью (пресеты)
-        const previews = [
-            { emoji: '🌅', name: 'Закат', style: 'пейзаж' },
-            { emoji: '🏙️', name: 'Город', style: 'архитектура' },
-            { emoji: '🚀', name: 'Космос', style: 'футуризм' },
-            { emoji: '🌸', name: 'Цветы', style: 'акварель' }
-        ];
-
-        // Карточки (пресеты)
-        const cards = [
-            { icon: '💼', title: 'Визитка', desc: 'Для бизнес-встреч' },
-            { icon: '🎨', title: 'Портфолио', desc: 'Дизайнерам и художникам' },
-            { icon: '🏢', title: 'Компания', desc: 'Корпоративный стиль' },
-            { icon: '🍕', title: 'Меню', desc: 'Для кафе и ресторанов' },
-            { icon: '🎓', title: 'Курсы', desc: 'Образовательные программы' },
-            { icon: '💎', title: 'Премиум', desc: 'Элитный дизайн' }
-        ];
-
-        // ================================================================
-        // 4. РЕНДЕРИНГ ВКЛАДОК
-        // ================================================================
-
-        // Аватары
-        const avatarContainer = document.getElementById('avatarOptions');
-        avatars.forEach((item, index) => {
-            const div = document.createElement('div');
-            div.className = 'avatar-option';
-            div.innerHTML = `
-                ${item.emoji}
-                <div class="check">✓</div>
-            `;
-            div.dataset.index = index;
-            div.onclick = () => selectAvatar(index);
-            if (index === 0) div.classList.add('selected');
-            avatarContainer.appendChild(div);
-        });
-
-        let selectedAvatar = 0;
-
-        function selectAvatar(index) {
-            document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
-            document.querySelectorAll('.avatar-option')[index].classList.add('selected');
-            selectedAvatar = index;
-            const prompt = document.getElementById('avatarPrompt');
-            prompt.placeholder = `Пример: ${avatars[index].name} в стиле...`;
-        }
-
-        // Превью
-        const previewGrid = document.getElementById('previewGrid');
-        previews.forEach((item) => {
-            const div = document.createElement('div');
-            div.className = 'preview-item';
-            div.innerHTML = `
-                ${item.emoji}
-                <div class="badge">${item.style}</div>
-                <div class="overlay">${item.name}</div>
-            `;
-            div.onclick = () => {
-                document.getElementById('previewPrompt').placeholder = 
-                    `Пример: ${item.name}, ${item.style}, реалистичный...`;
-                showToast(`🖼️ ${item.name} выбран`);
-            };
-            previewGrid.appendChild(div);
-        });
-
-        // Карточки
-        const cardsList = document.getElementById('cardsList');
-        cards.forEach((item) => {
-            const div = document.createElement('div');
-            div.className = 'card-item';
-            div.innerHTML = `
-                <div class="card-icon">${item.icon}</div>
-                <div class="card-info">
-                    <h4>${item.title}</h4>
-                    <p>${item.desc}</p>
-                </div>
-                <div class="card-arrow">›</div>
-            `;
-            div.onclick = () => {
-                document.getElementById('cardPrompt').placeholder = 
-                    `Пример: ${item.title}, ${item.desc}, стиль...`;
-                showToast(`📇 ${item.title} выбран`);
-            };
-            cardsList.appendChild(div);
-        });
-
-        // ================================================================
-        // 5. ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+        // 3. ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
         // ================================================================
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', function() {
@@ -645,7 +360,7 @@
         });
 
         // ================================================================
-        // 6. ГЕНЕРАЦИЯ И ОТПРАВКА В ЛС
+        // 4. ГЕНЕРАЦИЯ И ОТПРАВКА В ЛС
         // ================================================================
         function generateImage(type) {
             let prompt = '';
@@ -655,57 +370,52 @@
                 prompt = document.getElementById('avatarPrompt').value.trim();
                 typeName = '👤 Аватар';
                 if (!prompt) {
-                    prompt = avatars[selectedAvatar].name + ' стиль арт';
+                    showToast('⚠️ Введите описание аватара!');
+                    document.getElementById('avatarPrompt').focus();
+                    return;
                 }
             } else if (type === 'preview') {
                 prompt = document.getElementById('previewPrompt').value.trim();
                 typeName = '🖼️ Превью';
                 if (!prompt) {
-                    prompt = 'красивый пейзаж в стиле арт';
+                    showToast('⚠️ Введите описание изображения!');
+                    document.getElementById('previewPrompt').focus();
+                    return;
                 }
             } else if (type === 'card') {
                 prompt = document.getElementById('cardPrompt').value.trim();
                 typeName = '📇 Карточка';
                 if (!prompt) {
-                    prompt = 'бизнес-визитка минимализм';
+                    showToast('⚠️ Введите описание карточки!');
+                    document.getElementById('cardPrompt').focus();
+                    return;
                 }
             }
 
-            // Показываем кнопку загрузки
-            const btn = event?.target || document.querySelector('.btn-generate');
+            // Находим кнопку в текущей вкладке
+            const btn = document.querySelector(`#tab-${type} .btn-generate`);
             if (btn) {
                 btn.textContent = '⏳ Генерация...';
                 btn.disabled = true;
             }
 
-            // Имитация генерации (задержка)
             setTimeout(() => {
-                // Отправляем результат в Telegram
-                const message = `🎨 *Генерация изображения*\n\n` +
-                    `📌 *Тип:* ${typeName}\n` +
-                    `📝 *Промпт:* ${prompt}\n` +
-                    `👤 *Пользователь:* ${userName}\n` +
-                    `🆔 *ID:* ${userId}\n\n` +
-                    `✅ *Статус:* Сгенерировано успешно!`;
-
-                // Отправка в Telegram через sendData
                 if (tg) {
                     tg.sendData(JSON.stringify({
                         action: 'generate',
                         type: type,
+                        typeName: typeName,
                         prompt: prompt,
                         user: userName,
-                        userId: userId
+                        userId: userId,
+                        timestamp: new Date().toISOString()
                     }));
                 }
 
-                // Показываем тост
                 showToast('✅ Результат отправлен в ЛС!');
 
-                // Возвращаем кнопку
                 if (btn) {
-                    btn.textContent = '🚀 Сгенерировать ' + (type === 'avatar' ? 'аватар' : 
-                                                              type === 'preview' ? 'превью' : 'карточку');
+                    btn.textContent = `🚀 Сгенерировать ${type === 'avatar' ? 'аватар' : type === 'preview' ? 'превью' : 'карточку'}`;
                     btn.disabled = false;
                 }
 
@@ -718,7 +428,7 @@
         }
 
         // ================================================================
-        // 7. TOAST (уведомление)
+        // 5. TOAST
         // ================================================================
         let toastTimeout;
 
@@ -735,11 +445,11 @@
         }
 
         // ================================================================
-        // 8. ОБРАБОТКА ВВОДА (Enter для отправки)
+        // 6. ENTER ДЛЯ ОТПРАВКИ
         // ================================================================
         document.querySelectorAll('.prompt-input').forEach(input => {
             input.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
+                if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                     e.preventDefault();
                     const parent = input.closest('.tab-content');
                     const btn = parent?.querySelector('.btn-generate');
@@ -749,7 +459,7 @@
         });
 
         // ================================================================
-        // 9. ПРИВЕТСТВИЕ ПРИ ЗАГРУЗКЕ
+        // 7. ПРИВЕТСТВИЕ
         // ================================================================
         setTimeout(() => {
             showToast(`👋 Добро пожаловать, ${userName}!`);
