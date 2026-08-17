@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Тест</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            padding: 20px;
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px 0 30px;
+            border-bottom: 2px solid var(--tg-theme-hint-color, #e0e0e0);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--tg-theme-button-color, #0088cc);
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: var(--tg-theme-hint-color, #8e8e8e);
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--tg-theme-hint-color, #e0e0e0);
+            border-radius: 2px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--tg-theme-button-color, #0088cc);
+            transition: width 0.4s ease;
+            width: 0%;
+            border-radius: 2px;
+        }
+
+        .question-card {
+            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .question-card.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-number {
+            display: inline-block;
+            background: var(--tg-theme-button-color, #0088cc);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 14px 18px;
+            background: var(--tg-theme-bg-color, #ffffff);
+            border: 2px solid var(--tg-theme-hint-color, #d0d0d0);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .option:hover {
+            border-color: var(--tg-theme-button-color, #0088cc);
+            transform: translateX(4px);
+        }
+
+        .option.selected {
+            border-color: var(--tg-theme-button-color, #0088cc);
+            background: var(--tg-theme-button-color, #0088cc);
+            color: white;
+        }
+
+        .option.selected .option-letter {
+            background: white;
+            color: var(--tg-theme-button-color, #0088cc);
+        }
+
+        .option.correct {
+            border-color: #22c55e;
+            background: #dcfce7;
+        }
+
+        .option.wrong {
+            border-color: #ef4444;
+            background: #fee2e2;
+        }
+
+        .option-letter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--tg-theme-hint-color, #e0e0e0);
+            color: var(--tg-theme-text-color, #000000);
+            font-weight: 700;
+            font-size: 13px;
+            margin-right: 14px;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .option-text {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .option-check {
+            margin-left: auto;
+            font-size: 18px;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: var(--tg-theme-button-color, #0088cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--tg-theme-hint-color, #e0e0e0);
+            color: var(--tg-theme-text-color, #000000);
+        }
+
+        .btn-secondary:hover {
+            opacity: 0.8;
+        }
+
+        #result {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-card {
+            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+            border-radius: 16px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .result-emoji {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .result-score {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--tg-theme-button-color, #0088cc);
+            margin: 8px 0;
+        }
+
+        .result-label {
+            color: var(--tg-theme-hint-color, #8e8e8e);
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .result-message {
+            font-size: 18px;
+            margin: 16px 0 24px;
+            padding: 16px;
+            border-radius: 12px;
+            background: var(--tg-theme-bg-color, #ffffff);
+        }
+
+        .result-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--tg-theme-hint-color, #8e8e8e);
+            margin-top: 4px;
+        }
+
+        .stat-number.green {
+            color: #22c55e;
+        }
+        .stat-number.red {
+            color: #ef4444;
+        }
+
+        .btn-restart {
+            background: var(--tg-theme-button-color, #0088cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .btn-restart:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+            .header h1 {
+                font-size: 22px;
+            }
+            .question-text {
+                font-size: 16px;
+            }
+            .option {
+                padding: 12px 14px;
+            }
+            .option-text {
+                font-size: 14px;
+            }
+            .btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+            .result-score {
+                font-size: 36px;
+            }
+            .result-stats {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="header">
+            <h1>📋 Тест</h1>
+            <p>Ответь на 5 вопросов</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div id="questionsContainer"></div>
+
+        <div class="navigation" id="navigation">
+            <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()">◀ Назад</button>
+            <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Вперед ▶</button>
+        </div>
+
+        <div id="result">
+            <div class="result-card">
+                <div class="result-emoji" id="resultEmoji">🎉</div>
+                <div class="result-label">Правильных ответов</div>
+                <div class="result-score" id="resultScore">0/5</div>
+                <div class="result-message" id="resultMessage">Отлично!</div>
+                <div class="result-stats">
+                    <div class="stat-item">
+                        <div class="stat-number green" id="correctCount">0</div>
+                        <div class="stat-label">✅ Правильно</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number red" id="wrongCount">0</div>
+                        <div class="stat-label">❌ Неправильно</div>
+                    </div>
+                </div>
+                <button class="btn-restart" onclick="restartTest()">🔄 Пройти заново</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===================== ДАННЫЕ ТЕСТА =====================
+        const questions = [
+            {
+                question: "Сколько планет в Солнечной системе?",
+                options: ["7", "8", "9", "10"],
+                correct: 1
+            },
+            {
+                question: "Столица Франции?",
+                options: ["Лондон", "Париж", "Берлин", "Мадрид"],
+                correct: 1
+            },
+            {
+                question: "Сколько будет 2 + 2 × 2?",
+                options: ["4", "6", "8", "10"],
+                correct: 1
+            },
+            {
+                question: "Какой газ преобладает в атмосфере Земли?",
+                options: ["Кислород", "Азот", "Углекислый газ", "Аргон"],
+                correct: 1
+            },
+            {
+                question: "Кто написал роман 'Война и мир'?",
+                options: ["Пушкин", "Толстой", "Достоевский", "Чехов"],
+                correct: 1
+            }
+        ];
+
+        const letters = ['А', 'Б', 'В', 'Г'];
+
+        // ===================== СОСТОЯНИЕ =====================
+        let currentQuestion = 0;
+        let answers = new Array(questions.length).fill(null);
+        let isCompleted = false;
+
+        const tg = window.Telegram?.WebApp;
+
+        // ===================== ОТОБРАЖЕНИЕ =====================
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = `question-card ${index === 0 ? 'active' : ''}`;
+                card.id = `question-${index}`;
+
+                const selected = answers[index];
+
+                let optionsHTML = '';
+                q.options.forEach((option, optIndex) => {
+                    const isSelected = selected === optIndex;
+                    let additionalClass = 'option';
+                    if (isSelected) additionalClass += ' selected';
+                    
+                    optionsHTML += `
+                        <div class="${additionalClass}" onclick="selectOption(${index}, ${optIndex})">
+                            <span class="option-letter">${letters[optIndex]}</span>
+                            <span class="option-text">${option}</span>
+                            ${isSelected ? '<span class="option-check">✓</span>' : ''}
+                        </div>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <span class="question-number">Вопрос ${index + 1} из ${questions.length}</span>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options">${optionsHTML}</div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            updateProgress();
+            updateNavigation();
+        }
+
+        function showQuestion(index) {
+            document.querySelectorAll('.question-card').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById(`question-${index}`);
+            if (target) target.classList.add('active');
+            currentQuestion = index;
+            updateProgress();
+            updateNavigation();
+        }
+
+        function selectOption(questionIndex, optionIndex) {
+            if (isCompleted) return;
+
+            answers[questionIndex] = optionIndex;
+
+            const card = document.getElementById(`question-${questionIndex}`);
+            const options = card.querySelectorAll('.option');
+            options.forEach((el, idx) => {
+                el.classList.remove('selected');
+                const check = el.querySelector('.option-check');
+                if (check) check.remove();
+                if (idx === optionIndex) {
+                    el.classList.add('selected');
+                    const span = document.createElement('span');
+                    span.className = 'option-check';
+                    span.textContent = '✓';
+                    el.appendChild(span);
+                }
+            });
+
+            updateProgress();
+            updateNavigation();
+
+            if (tg) {
+                tg.sendData(JSON.stringify({
+                    action: 'answer',
+                    question: questionIndex,
+                    answer: optionIndex
+                }));
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                showQuestion(currentQuestion + 1);
+            } else if (answers.every(a => a !== null)) {
+                finishTest();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                showQuestion(currentQuestion - 1);
+            }
+        }
+
+        function updateProgress() {
+            const answered = answers.filter(a => a !== null).length;
+            const total = questions.length;
+            const progress = (answered / total) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            prevBtn.disabled = currentQuestion === 0;
+
+            const isLast = currentQuestion === questions.length - 1;
+            const isAnswered = answers[currentQuestion] !== null;
+            const allAnswered = answers.every(a => a !== null);
+
+            if (isLast) {
+                nextBtn.textContent = allAnswered ? '✅ Завершить' : '📝 Ответьте на все';
+                nextBtn.disabled = !allAnswered;
+            } else {
+                nextBtn.textContent = 'Вперед ▶';
+                nextBtn.disabled = !isAnswered;
+            }
+        }
+
+        // ===================== РЕЗУЛЬТАТЫ =====================
+        function finishTest() {
+            isCompleted = true;
+            
+            questions.forEach((q, index) => {
+                const card = document.getElementById(`question-${index}`);
+                const options = card.querySelectorAll('.option');
+                options.forEach((el, idx) => {
+                    el.classList.remove('selected');
+                    const check = el.querySelector('.option-check');
+                    if (check) check.remove();
+                    
+                    if (idx === q.correct) {
+                        el.classList.add('correct');
+                    } else if (answers[index] === idx && idx !== q.correct) {
+                        el.classList.add('wrong');
+                    }
+                });
+            });
+
+            let correct = 0;
+            answers.forEach((ans, idx) => {
+                if (ans === questions[idx].correct) correct++;
+            });
+            const wrong = questions.length - correct;
+
+            document.getElementById('questionsContainer').style.display = 'none';
+            document.getElementById('navigation').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+
+            document.getElementById('resultScore').textContent = `${correct}/${questions.length}`;
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('wrongCount').textContent = wrong;
+
+            let emoji, message;
+            if (correct === questions.length) {
+                emoji = '🎉';
+                message = 'Идеально! Ты гений! 🌟';
+            } else if (correct >= questions.length * 0.7) {
+                emoji = '😊';
+                message = 'Отлично! Ты знаешь тему! 👍';
+            } else if (correct >= questions.length * 0.5) {
+                emoji = '🤔';
+                message = 'Неплохо, но есть куда расти! 💪';
+            } else {
+                emoji = '📚';
+                message = 'Попробуй ещё раз, у тебя получится! 😉';
+            }
+
+            document.getElementById('resultEmoji').textContent = emoji;
+            document.getElementById('resultMessage').textContent = message;
+
+            if (tg) {
+                tg.sendData(JSON.stringify({
+                    action: 'result',
+                    score: `${correct}/${questions.length}`,
+                    correct: correct,
+                    total: questions.length
+                }));
+            }
+        }
+
+        function restartTest() {
+            currentQuestion = 0;
+            answers = new Array(questions.length).fill(null);
+            isCompleted = false;
+
+            document.getElementById('questionsContainer').style.display = 'block';
+            document.getElementById('navigation').style.display = 'flex';
+            document.getElementById('result').style.display = 'none';
+
+            renderQuestions();
+            showQuestion(0);
+        }
+
+        // ===================== ИНИЦИАЛИЗАЦИЯ =====================
+        document.addEventListener('DOMContentLoaded', () => {
+            if (tg) {
+                tg.ready();
+                tg.expand();
+            }
+
+            renderQuestions();
+            showQuestion(0);
+        });
+    </script>
+</body>
+</html>
