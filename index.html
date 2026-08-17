@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Тест</title>
+    <title>AI Generator</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -14,61 +14,111 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
-            padding: 20px;
+            background: #0a0a0a;
+            color: #ffffff;
             min-height: 100vh;
-            transition: background 0.3s, color 0.3s;
+            padding: 20px;
+            padding-bottom: 100px;
         }
 
+        /* ===== ХЕДЕР С АВАТАРКОЙ ===== */
         .header {
-            text-align: center;
-            padding: 20px 0 30px;
-            border-bottom: 2px solid var(--tg-theme-hint-color, #e0e0e0);
-            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 0;
+            border-bottom: 1px solid #1a1a1a;
+            margin-bottom: 24px;
         }
 
-        .header h1 {
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6c5ce7, #0984e3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 28px;
             font-weight: 700;
-            color: var(--tg-theme-button-color, #0088cc);
-            margin-bottom: 8px;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 0 20px rgba(108, 92, 231, 0.3);
         }
 
-        .header p {
-            color: var(--tg-theme-hint-color, #8e8e8e);
-            font-size: 14px;
-        }
-
-        .progress-bar {
+        .avatar img {
             width: 100%;
-            height: 4px;
-            background: var(--tg-theme-hint-color, #e0e0e0);
-            border-radius: 2px;
-            margin-top: 15px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
             height: 100%;
-            background: var(--tg-theme-button-color, #0088cc);
-            transition: width 0.4s ease;
-            width: 0%;
-            border-radius: 2px;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
-        .question-card {
-            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        .user-info {
+            flex: 1;
+        }
+
+        .user-info h1 {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6c5ce7, #0984e3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .user-info p {
+            font-size: 13px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        /* ===== ВКЛАДКИ ===== */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+            background: #141414;
+            border-radius: 12px;
+            padding: 6px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 8px;
+            border: none;
+            background: transparent;
+            color: #666;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
             transition: all 0.3s;
-            display: none;
-            animation: fadeIn 0.4s ease;
+            text-align: center;
         }
 
-        .question-card.active {
+        .tab.active {
+            background: #6c5ce7;
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+        }
+
+        .tab:hover {
+            color: white;
+        }
+
+        .tab .tab-icon {
+            font-size: 20px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* ===== КОНТЕНТ ВКЛАДОК ===== */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
             display: block;
         }
 
@@ -83,535 +133,627 @@
             }
         }
 
-        .question-number {
-            display: inline-block;
-            background: var(--tg-theme-button-color, #0088cc);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        .question-text {
-            font-size: 18px;
-            font-weight: 600;
+        /* ===== АВАТАР (вкладка) ===== */
+        .avatar-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
             margin-bottom: 20px;
-            line-height: 1.5;
         }
 
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .option {
+        .avatar-option {
+            aspect-ratio: 1;
+            border-radius: 16px;
+            background: #141414;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
-            padding: 14px 18px;
-            background: var(--tg-theme-bg-color, #ffffff);
-            border: 2px solid var(--tg-theme-hint-color, #d0d0d0);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
+            justify-content: center;
+            font-size: 40px;
             position: relative;
+            overflow: hidden;
         }
 
-        .option:hover {
-            border-color: var(--tg-theme-button-color, #0088cc);
+        .avatar-option:hover {
+            border-color: #6c5ce7;
+            transform: scale(1.02);
+        }
+
+        .avatar-option.selected {
+            border-color: #6c5ce7;
+            box-shadow: 0 0 20px rgba(108, 92, 231, 0.3);
+        }
+
+        .avatar-option .check {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #6c5ce7;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            display: none;
+        }
+
+        .avatar-option.selected .check {
+            display: flex;
+        }
+
+        .avatar-option img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ===== ПРЕВЬЮ ===== */
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .preview-item {
+            aspect-ratio: 1;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+            border: 1px solid #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #444;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-item:hover {
+            border-color: #6c5ce7;
+            transform: scale(1.02);
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-item .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            font-size: 12px;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .preview-item:hover .overlay {
+            opacity: 1;
+        }
+
+        .preview-item .badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #6c5ce7;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* ===== КАРТОЧКИ ===== */
+        .card-item {
+            background: #141414;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid #1a1a1a;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .card-item:hover {
+            border-color: #6c5ce7;
             transform: translateX(4px);
         }
 
-        .option.selected {
-            border-color: var(--tg-theme-button-color, #0088cc);
-            background: var(--tg-theme-button-color, #0088cc);
-            color: white;
-        }
-
-        .option.selected .option-letter {
-            background: white;
-            color: var(--tg-theme-button-color, #0088cc);
-        }
-
-        .option.correct {
-            border-color: #22c55e;
-            background: #dcfce7;
-        }
-
-        .option.wrong {
-            border-color: #ef4444;
-            background: #fee2e2;
-        }
-
-        .option-letter {
+        .card-item .card-icon {
+            font-size: 32px;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: #1a1a1a;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: var(--tg-theme-hint-color, #e0e0e0);
-            color: var(--tg-theme-text-color, #000000);
-            font-weight: 700;
-            font-size: 13px;
-            margin-right: 14px;
             flex-shrink: 0;
-            transition: all 0.2s;
         }
 
-        .option-text {
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        .option-check {
-            margin-left: auto;
-            font-size: 18px;
-        }
-
-        .navigation {
-            display: flex;
-            gap: 12px;
-            margin-top: 30px;
-            justify-content: space-between;
-        }
-
-        .btn {
-            padding: 14px 28px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
+        .card-item .card-info {
             flex: 1;
         }
 
-        .btn-primary {
-            background: var(--tg-theme-button-color, #0088cc);
-            color: var(--tg-theme-button-text-color, #ffffff);
+        .card-item .card-info h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
         }
 
-        .btn-primary:hover {
-            opacity: 0.9;
-            transform: scale(0.98);
+        .card-item .card-info p {
+            font-size: 12px;
+            color: #888;
         }
 
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
+        .card-item .card-arrow {
+            color: #444;
+            font-size: 18px;
         }
 
-        .btn-secondary {
-            background: var(--tg-theme-hint-color, #e0e0e0);
-            color: var(--tg-theme-text-color, #000000);
-        }
-
-        .btn-secondary:hover {
-            opacity: 0.8;
-        }
-
-        #result {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .result-card {
-            background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+        /* ===== ПРОМПТ ===== */
+        .prompt-section {
+            margin-top: 16px;
+            background: #141414;
             border-radius: 16px;
-            padding: 32px 24px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 16px;
+            border: 1px solid #1a1a1a;
         }
 
-        .result-emoji {
-            font-size: 64px;
-            margin-bottom: 16px;
-        }
-
-        .result-score {
-            font-size: 48px;
-            font-weight: 700;
-            color: var(--tg-theme-button-color, #0088cc);
-            margin: 8px 0;
-        }
-
-        .result-label {
-            color: var(--tg-theme-hint-color, #8e8e8e);
-            font-size: 16px;
+        .prompt-section label {
+            font-size: 13px;
+            color: #888;
+            display: block;
             margin-bottom: 8px;
         }
 
-        .result-message {
-            font-size: 18px;
-            margin: 16px 0 24px;
-            padding: 16px;
+        .prompt-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
             border-radius: 12px;
-            background: var(--tg-theme-bg-color, #ffffff);
+            color: white;
+            font-size: 15px;
+            outline: none;
+            transition: border 0.3s;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
         }
 
-        .result-stats {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin: 20px 0;
+        .prompt-input:focus {
+            border-color: #6c5ce7;
         }
 
-        .stat-item {
-            text-align: center;
+        .prompt-input::placeholder {
+            color: #444;
         }
 
-        .stat-number {
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: var(--tg-theme-hint-color, #8e8e8e);
-            margin-top: 4px;
-        }
-
-        .stat-number.green {
-            color: #22c55e;
-        }
-        .stat-number.red {
-            color: #ef4444;
-        }
-
-        .btn-restart {
-            background: var(--tg-theme-button-color, #0088cc);
-            color: var(--tg-theme-button-text-color, #ffffff);
-            padding: 14px 28px;
+        .btn-generate {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #6c5ce7, #0984e3);
             border: none;
             border-radius: 12px;
+            color: white;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
-            width: 100%;
+            transition: all 0.3s;
+            margin-top: 12px;
         }
 
-        .btn-restart:hover {
-            opacity: 0.9;
+        .btn-generate:hover {
             transform: scale(0.98);
+            opacity: 0.9;
         }
 
+        .btn-generate:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ===== СООБЩЕНИЕ ОБ ОТПРАВКЕ ===== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: #1a1a1a;
+            border: 1px solid #6c5ce7;
+            border-radius: 16px;
+            padding: 16px 20px;
+            color: white;
+            text-align: center;
+            font-size: 14px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast .toast-icon {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* ===== СКРОЛЛ ===== */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #6c5ce7;
+            border-radius: 10px;
+        }
+
+        /* ===== АДАПТИВ ===== */
         @media (max-width: 480px) {
             body {
-                padding: 12px;
+                padding: 14px;
+                padding-bottom: 90px;
             }
-            .header h1 {
-                font-size: 22px;
+            .avatar-options {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
             }
-            .question-text {
-                font-size: 16px;
+            .preview-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
             }
-            .option {
-                padding: 12px 14px;
+            .tab {
+                font-size: 12px;
+                padding: 10px 6px;
             }
-            .option-text {
-                font-size: 14px;
-            }
-            .btn {
-                padding: 12px 20px;
-                font-size: 14px;
-            }
-            .result-score {
-                font-size: 36px;
-            }
-            .result-stats {
-                gap: 20px;
+            .tab .tab-icon {
+                font-size: 18px;
             }
         }
     </style>
 </head>
 <body>
-    <div id="app">
-        <div class="header">
-            <h1>📋 Тест</h1>
-            <p>Ответь на 5 вопросов</p>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-        </div>
-
-        <div id="questionsContainer"></div>
-
-        <div class="navigation" id="navigation">
-            <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()">◀ Назад</button>
-            <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Вперед ▶</button>
-        </div>
-
-        <div id="result">
-            <div class="result-card">
-                <div class="result-emoji" id="resultEmoji">🎉</div>
-                <div class="result-label">Правильных ответов</div>
-                <div class="result-score" id="resultScore">0/5</div>
-                <div class="result-message" id="resultMessage">Отлично!</div>
-                <div class="result-stats">
-                    <div class="stat-item">
-                        <div class="stat-number green" id="correctCount">0</div>
-                        <div class="stat-label">✅ Правильно</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number red" id="wrongCount">0</div>
-                        <div class="stat-label">❌ Неправильно</div>
-                    </div>
-                </div>
-                <button class="btn-restart" onclick="restartTest()">🔄 Пройти заново</button>
-            </div>
+    <!-- ===== ХЕДЕР ===== -->
+    <div class="header">
+        <div class="avatar" id="avatarDisplay">👤</div>
+        <div class="user-info">
+            <h1 id="userName">Добро пожаловать!</h1>
+            <p>✨ Генерация изображений</p>
         </div>
     </div>
 
+    <!-- ===== ВКЛАДКИ ===== -->
+    <div class="tabs">
+        <button class="tab active" data-tab="avatar">
+            <span class="tab-icon">👤</span>
+            Аватар
+        </button>
+        <button class="tab" data-tab="preview">
+            <span class="tab-icon">🖼️</span>
+            Превью
+        </button>
+        <button class="tab" data-tab="cards">
+            <span class="tab-icon">📇</span>
+            Карточки
+        </button>
+    </div>
+
+    <!-- ===== ВКЛАДКА: АВАТАР ===== -->
+    <div class="tab-content active" id="tab-avatar">
+        <div class="avatar-options" id="avatarOptions">
+            <!-- Генерируется JS -->
+        </div>
+        <div class="prompt-section">
+            <label>📝 Опиши аватар (промпт)</label>
+            <textarea class="prompt-input" id="avatarPrompt" placeholder="Например: красивый закат на пляже, стиль арт..."></textarea>
+            <button class="btn-generate" onclick="generateImage('avatar')">🚀 Сгенерировать аватар</button>
+        </div>
+    </div>
+
+    <!-- ===== ВКЛАДКА: ПРЕВЬЮ ===== -->
+    <div class="tab-content" id="tab-preview">
+        <div class="preview-grid" id="previewGrid">
+            <!-- Генерируется JS -->
+        </div>
+        <div class="prompt-section" style="margin-top: 16px;">
+            <label>📝 Опиши изображение (промпт)</label>
+            <textarea class="prompt-input" id="previewPrompt" placeholder="Например: космический корабль в стиле киберпанк..."></textarea>
+            <button class="btn-generate" onclick="generateImage('preview')">🚀 Сгенерировать превью</button>
+        </div>
+    </div>
+
+    <!-- ===== ВКЛАДКА: КАРТОЧКИ ===== -->
+    <div class="tab-content" id="tab-cards">
+        <div id="cardsList">
+            <!-- Генерируется JS -->
+        </div>
+        <div class="prompt-section">
+            <label>📝 Опиши карточку (промпт)</label>
+            <textarea class="prompt-input" id="cardPrompt" placeholder="Например: визитка для бизнеса, минимализм..."></textarea>
+            <button class="btn-generate" onclick="generateImage('card')">🚀 Сгенерировать карточку</button>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast">
+        <span class="toast-icon">✅</span>
+        <span id="toastMessage">Результат отправлен в ЛС!</span>
+    </div>
+
     <script>
-        // ===================== ДАННЫЕ ТЕСТА =====================
-        const questions = [
-            {
-                question: "Сколько планет в Солнечной системе?",
-                options: ["7", "8", "9", "10"],
-                correct: 1
-            },
-            {
-                question: "Столица Франции?",
-                options: ["Лондон", "Париж", "Берлин", "Мадрид"],
-                correct: 1
-            },
-            {
-                question: "Сколько будет 2 + 2 × 2?",
-                options: ["4", "6", "8", "10"],
-                correct: 1
-            },
-            {
-                question: "Какой газ преобладает в атмосфере Земли?",
-                options: ["Кислород", "Азот", "Углекислый газ", "Аргон"],
-                correct: 1
-            },
-            {
-                question: "Кто написал роман 'Война и мир'?",
-                options: ["Пушкин", "Толстой", "Достоевский", "Чехов"],
-                correct: 1
-            }
-        ];
-
-        const letters = ['А', 'Б', 'В', 'Г'];
-
-        // ===================== СОСТОЯНИЕ =====================
-        let currentQuestion = 0;
-        let answers = new Array(questions.length).fill(null);
-        let isCompleted = false;
-
+        // ================================================================
+        // 1. TELEGRAM ИНИЦИАЛИЗАЦИЯ
+        // ================================================================
         const tg = window.Telegram?.WebApp;
 
-        // ===================== ОТОБРАЖЕНИЕ =====================
-        function renderQuestions() {
-            const container = document.getElementById('questionsContainer');
-            container.innerHTML = '';
+        if (tg) {
+            tg.ready();
+            tg.expand();
+        }
 
-            questions.forEach((q, index) => {
-                const card = document.createElement('div');
-                card.className = `question-card ${index === 0 ? 'active' : ''}`;
-                card.id = `question-${index}`;
+        // ================================================================
+        // 2. ДАННЫЕ ПОЛЬЗОВАТЕЛЯ
+        // ================================================================
+        const user = tg?.initDataUnsafe?.user;
+        const userName = user?.first_name || user?.username || 'Гость';
+        const userId = user?.id || 'неизвестно';
 
-                const selected = answers[index];
+        // Отображаем имя
+        document.getElementById('userName').textContent = `Добро пожаловать, ${userName}!`;
 
-                let optionsHTML = '';
-                q.options.forEach((option, optIndex) => {
-                    const isSelected = selected === optIndex;
-                    let additionalClass = 'option';
-                    if (isSelected) additionalClass += ' selected';
-                    
-                    optionsHTML += `
-                        <div class="${additionalClass}" onclick="selectOption(${index}, ${optIndex})">
-                            <span class="option-letter">${letters[optIndex]}</span>
-                            <span class="option-text">${option}</span>
-                            ${isSelected ? '<span class="option-check">✓</span>' : ''}
-                        </div>
-                    `;
-                });
+        // Аватарка (инициалы)
+        const avatarDisplay = document.getElementById('avatarDisplay');
+        const initials = userName.charAt(0).toUpperCase() || '👤';
+        avatarDisplay.textContent = initials;
 
-                card.innerHTML = `
-                    <span class="question-number">Вопрос ${index + 1} из ${questions.length}</span>
-                    <div class="question-text">${q.question}</div>
-                    <div class="options">${optionsHTML}</div>
-                `;
+        // ================================================================
+        // 3. ДАННЫЕ ДЛЯ ВКЛАДОК
+        // ================================================================
 
-                container.appendChild(card);
+        // Аватары (пресеты)
+        const avatars = [
+            { emoji: '🧑‍💼', name: 'Бизнес' },
+            { emoji: '👩‍🎨', name: 'Креатив' },
+            { emoji: '🧑‍🚀', name: 'Космос' },
+            { emoji: '👨‍🍳', name: 'Кулинар' },
+            { emoji: '🧑‍🏫', name: 'Образование' },
+            { emoji: '👩‍💻', name: 'IT' }
+        ];
+
+        // Превью (пресеты)
+        const previews = [
+            { emoji: '🌅', name: 'Закат', style: 'пейзаж' },
+            { emoji: '🏙️', name: 'Город', style: 'архитектура' },
+            { emoji: '🚀', name: 'Космос', style: 'футуризм' },
+            { emoji: '🌸', name: 'Цветы', style: 'акварель' }
+        ];
+
+        // Карточки (пресеты)
+        const cards = [
+            { icon: '💼', title: 'Визитка', desc: 'Для бизнес-встреч' },
+            { icon: '🎨', title: 'Портфолио', desc: 'Дизайнерам и художникам' },
+            { icon: '🏢', title: 'Компания', desc: 'Корпоративный стиль' },
+            { icon: '🍕', title: 'Меню', desc: 'Для кафе и ресторанов' },
+            { icon: '🎓', title: 'Курсы', desc: 'Образовательные программы' },
+            { icon: '💎', title: 'Премиум', desc: 'Элитный дизайн' }
+        ];
+
+        // ================================================================
+        // 4. РЕНДЕРИНГ ВКЛАДОК
+        // ================================================================
+
+        // Аватары
+        const avatarContainer = document.getElementById('avatarOptions');
+        avatars.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'avatar-option';
+            div.innerHTML = `
+                ${item.emoji}
+                <div class="check">✓</div>
+            `;
+            div.dataset.index = index;
+            div.onclick = () => selectAvatar(index);
+            if (index === 0) div.classList.add('selected');
+            avatarContainer.appendChild(div);
+        });
+
+        let selectedAvatar = 0;
+
+        function selectAvatar(index) {
+            document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
+            document.querySelectorAll('.avatar-option')[index].classList.add('selected');
+            selectedAvatar = index;
+            const prompt = document.getElementById('avatarPrompt');
+            prompt.placeholder = `Пример: ${avatars[index].name} в стиле...`;
+        }
+
+        // Превью
+        const previewGrid = document.getElementById('previewGrid');
+        previews.forEach((item) => {
+            const div = document.createElement('div');
+            div.className = 'preview-item';
+            div.innerHTML = `
+                ${item.emoji}
+                <div class="badge">${item.style}</div>
+                <div class="overlay">${item.name}</div>
+            `;
+            div.onclick = () => {
+                document.getElementById('previewPrompt').placeholder = 
+                    `Пример: ${item.name}, ${item.style}, реалистичный...`;
+                showToast(`🖼️ ${item.name} выбран`);
+            };
+            previewGrid.appendChild(div);
+        });
+
+        // Карточки
+        const cardsList = document.getElementById('cardsList');
+        cards.forEach((item) => {
+            const div = document.createElement('div');
+            div.className = 'card-item';
+            div.innerHTML = `
+                <div class="card-icon">${item.icon}</div>
+                <div class="card-info">
+                    <h4>${item.title}</h4>
+                    <p>${item.desc}</p>
+                </div>
+                <div class="card-arrow">›</div>
+            `;
+            div.onclick = () => {
+                document.getElementById('cardPrompt').placeholder = 
+                    `Пример: ${item.title}, ${item.desc}, стиль...`;
+                showToast(`📇 ${item.title} выбран`);
+            };
+            cardsList.appendChild(div);
+        });
+
+        // ================================================================
+        // 5. ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+        // ================================================================
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                const target = document.getElementById(`tab-${this.dataset.tab}`);
+                if (target) target.classList.add('active');
             });
+        });
 
-            updateProgress();
-            updateNavigation();
+        // ================================================================
+        // 6. ГЕНЕРАЦИЯ И ОТПРАВКА В ЛС
+        // ================================================================
+        function generateImage(type) {
+            let prompt = '';
+            let typeName = '';
+
+            if (type === 'avatar') {
+                prompt = document.getElementById('avatarPrompt').value.trim();
+                typeName = '👤 Аватар';
+                if (!prompt) {
+                    prompt = avatars[selectedAvatar].name + ' стиль арт';
+                }
+            } else if (type === 'preview') {
+                prompt = document.getElementById('previewPrompt').value.trim();
+                typeName = '🖼️ Превью';
+                if (!prompt) {
+                    prompt = 'красивый пейзаж в стиле арт';
+                }
+            } else if (type === 'card') {
+                prompt = document.getElementById('cardPrompt').value.trim();
+                typeName = '📇 Карточка';
+                if (!prompt) {
+                    prompt = 'бизнес-визитка минимализм';
+                }
+            }
+
+            // Показываем кнопку загрузки
+            const btn = event?.target || document.querySelector('.btn-generate');
+            if (btn) {
+                btn.textContent = '⏳ Генерация...';
+                btn.disabled = true;
+            }
+
+            // Имитация генерации (задержка)
+            setTimeout(() => {
+                // Отправляем результат в Telegram
+                const message = `🎨 *Генерация изображения*\n\n` +
+                    `📌 *Тип:* ${typeName}\n` +
+                    `📝 *Промпт:* ${prompt}\n` +
+                    `👤 *Пользователь:* ${userName}\n` +
+                    `🆔 *ID:* ${userId}\n\n` +
+                    `✅ *Статус:* Сгенерировано успешно!`;
+
+                // Отправка в Telegram через sendData
+                if (tg) {
+                    tg.sendData(JSON.stringify({
+                        action: 'generate',
+                        type: type,
+                        prompt: prompt,
+                        user: userName,
+                        userId: userId
+                    }));
+                }
+
+                // Показываем тост
+                showToast('✅ Результат отправлен в ЛС!');
+
+                // Возвращаем кнопку
+                if (btn) {
+                    btn.textContent = '🚀 Сгенерировать ' + (type === 'avatar' ? 'аватар' : 
+                                                              type === 'preview' ? 'превью' : 'карточку');
+                    btn.disabled = false;
+                }
+
+                // Очищаем поле
+                if (type === 'avatar') document.getElementById('avatarPrompt').value = '';
+                else if (type === 'preview') document.getElementById('previewPrompt').value = '';
+                else if (type === 'card') document.getElementById('cardPrompt').value = '';
+
+            }, 1500);
         }
 
-        function showQuestion(index) {
-            document.querySelectorAll('.question-card').forEach(el => el.classList.remove('active'));
-            const target = document.getElementById(`question-${index}`);
-            if (target) target.classList.add('active');
-            currentQuestion = index;
-            updateProgress();
-            updateNavigation();
+        // ================================================================
+        // 7. TOAST (уведомление)
+        // ================================================================
+        let toastTimeout;
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
 
-        function selectOption(questionIndex, optionIndex) {
-            if (isCompleted) return;
-
-            answers[questionIndex] = optionIndex;
-
-            const card = document.getElementById(`question-${questionIndex}`);
-            const options = card.querySelectorAll('.option');
-            options.forEach((el, idx) => {
-                el.classList.remove('selected');
-                const check = el.querySelector('.option-check');
-                if (check) check.remove();
-                if (idx === optionIndex) {
-                    el.classList.add('selected');
-                    const span = document.createElement('span');
-                    span.className = 'option-check';
-                    span.textContent = '✓';
-                    el.appendChild(span);
+        // ================================================================
+        // 8. ОБРАБОТКА ВВОДА (Enter для отправки)
+        // ================================================================
+        document.querySelectorAll('.prompt-input').forEach(input => {
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    const parent = input.closest('.tab-content');
+                    const btn = parent?.querySelector('.btn-generate');
+                    if (btn) btn.click();
                 }
             });
-
-            updateProgress();
-            updateNavigation();
-
-            if (tg) {
-                tg.sendData(JSON.stringify({
-                    action: 'answer',
-                    question: questionIndex,
-                    answer: optionIndex
-                }));
-            }
-        }
-
-        function nextQuestion() {
-            if (currentQuestion < questions.length - 1) {
-                showQuestion(currentQuestion + 1);
-            } else if (answers.every(a => a !== null)) {
-                finishTest();
-            }
-        }
-
-        function prevQuestion() {
-            if (currentQuestion > 0) {
-                showQuestion(currentQuestion - 1);
-            }
-        }
-
-        function updateProgress() {
-            const answered = answers.filter(a => a !== null).length;
-            const total = questions.length;
-            const progress = (answered / total) * 100;
-            document.getElementById('progressFill').style.width = `${progress}%`;
-        }
-
-        function updateNavigation() {
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-
-            prevBtn.disabled = currentQuestion === 0;
-
-            const isLast = currentQuestion === questions.length - 1;
-            const isAnswered = answers[currentQuestion] !== null;
-            const allAnswered = answers.every(a => a !== null);
-
-            if (isLast) {
-                nextBtn.textContent = allAnswered ? '✅ Завершить' : '📝 Ответьте на все';
-                nextBtn.disabled = !allAnswered;
-            } else {
-                nextBtn.textContent = 'Вперед ▶';
-                nextBtn.disabled = !isAnswered;
-            }
-        }
-
-        // ===================== РЕЗУЛЬТАТЫ =====================
-        function finishTest() {
-            isCompleted = true;
-            
-            questions.forEach((q, index) => {
-                const card = document.getElementById(`question-${index}`);
-                const options = card.querySelectorAll('.option');
-                options.forEach((el, idx) => {
-                    el.classList.remove('selected');
-                    const check = el.querySelector('.option-check');
-                    if (check) check.remove();
-                    
-                    if (idx === q.correct) {
-                        el.classList.add('correct');
-                    } else if (answers[index] === idx && idx !== q.correct) {
-                        el.classList.add('wrong');
-                    }
-                });
-            });
-
-            let correct = 0;
-            answers.forEach((ans, idx) => {
-                if (ans === questions[idx].correct) correct++;
-            });
-            const wrong = questions.length - correct;
-
-            document.getElementById('questionsContainer').style.display = 'none';
-            document.getElementById('navigation').style.display = 'none';
-            document.getElementById('result').style.display = 'block';
-
-            document.getElementById('resultScore').textContent = `${correct}/${questions.length}`;
-            document.getElementById('correctCount').textContent = correct;
-            document.getElementById('wrongCount').textContent = wrong;
-
-            let emoji, message;
-            if (correct === questions.length) {
-                emoji = '🎉';
-                message = 'Идеально! Ты гений! 🌟';
-            } else if (correct >= questions.length * 0.7) {
-                emoji = '😊';
-                message = 'Отлично! Ты знаешь тему! 👍';
-            } else if (correct >= questions.length * 0.5) {
-                emoji = '🤔';
-                message = 'Неплохо, но есть куда расти! 💪';
-            } else {
-                emoji = '📚';
-                message = 'Попробуй ещё раз, у тебя получится! 😉';
-            }
-
-            document.getElementById('resultEmoji').textContent = emoji;
-            document.getElementById('resultMessage').textContent = message;
-
-            if (tg) {
-                tg.sendData(JSON.stringify({
-                    action: 'result',
-                    score: `${correct}/${questions.length}`,
-                    correct: correct,
-                    total: questions.length
-                }));
-            }
-        }
-
-        function restartTest() {
-            currentQuestion = 0;
-            answers = new Array(questions.length).fill(null);
-            isCompleted = false;
-
-            document.getElementById('questionsContainer').style.display = 'block';
-            document.getElementById('navigation').style.display = 'flex';
-            document.getElementById('result').style.display = 'none';
-
-            renderQuestions();
-            showQuestion(0);
-        }
-
-        // ===================== ИНИЦИАЛИЗАЦИЯ =====================
-        document.addEventListener('DOMContentLoaded', () => {
-            if (tg) {
-                tg.ready();
-                tg.expand();
-            }
-
-            renderQuestions();
-            showQuestion(0);
         });
+
+        // ================================================================
+        // 9. ПРИВЕТСТВИЕ ПРИ ЗАГРУЗКЕ
+        // ================================================================
+        setTimeout(() => {
+            showToast(`👋 Добро пожаловать, ${userName}!`);
+        }, 500);
     </script>
 </body>
 </html>
