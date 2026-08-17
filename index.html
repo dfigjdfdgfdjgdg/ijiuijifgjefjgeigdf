@@ -242,10 +242,10 @@
 </head>
 <body>
     <div class="header">
-        <div class="avatar" id="avatarDisplay">👤</div>
+        <div class="avatar" id="avatarDisplay"></div>
         <div class="user-info">
             <h1 id="userName">Добро пожаловать!</h1>
-            <p>UnSkippable Studio</p>
+            <p>AI Генератор</p>
         </div>
     </div>
 
@@ -259,7 +259,7 @@
         <div class="prompt-section">
             <label>Опиши аватар (промпт)</label>
             <textarea class="prompt-input" id="avatarPrompt" placeholder="Например: красивый закат на пляже, стиль арт, 4k..."></textarea>
-            <button class="btn-generate" onclick="generateImage('avatar')">Сгенерировать1 аватар</button>
+            <button class="btn-generate" onclick="generateImage('avatar')">Сгенерировать аватар</button>
         </div>
     </div>
 
@@ -284,6 +284,9 @@
     </div>
 
     <script>
+        // ================================================================
+        // 1. TELEGRAM ИНИЦИАЛИЗАЦИЯ
+        // ================================================================
         const tg = window.Telegram?.WebApp;
 
         if (tg) {
@@ -291,6 +294,9 @@
             tg.expand();
         }
 
+        // ================================================================
+        // 2. ДАННЫЕ ПОЛЬЗОВАТЕЛЯ
+        // ================================================================
         const user = tg?.initDataUnsafe?.user;
         const userName = user?.first_name || user?.username || 'Гость';
         const userId = user?.id || 'неизвестно';
@@ -301,6 +307,9 @@
         const initials = userName.charAt(0).toUpperCase() || 'A';
         avatarDisplay.textContent = initials;
 
+        // ================================================================
+        // 3. ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+        // ================================================================
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', function() {
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -312,6 +321,9 @@
             });
         });
 
+        // ================================================================
+        // 4. ГЕНЕРАЦИЯ И ОТПРАВКА В ЛС
+        // ================================================================
         function generateImage(type) {
             let prompt = '';
             let typeName = '';
@@ -349,7 +361,9 @@
             }
 
             setTimeout(() => {
-                // Отправляем данные боту
+                // =====================================================
+                // ОТПРАВЛЯЕМ ДАННЫЕ БОТУ
+                // =====================================================
                 if (tg) {
                     tg.sendData(JSON.stringify({
                         action: 'generate',
@@ -359,6 +373,18 @@
                         user: userName,
                         userId: userId
                     }));
+                    
+                    console.log('Данные отправлены боту:', {
+                        action: 'generate',
+                        type: type,
+                        typeName: typeName,
+                        prompt: prompt,
+                        user: userName,
+                        userId: userId
+                    });
+                } else {
+                    console.error('Telegram WebApp не найден!');
+                    showToast('Ошибка: не удалось отправить данные');
                 }
 
                 showToast('Результат отправлен в ЛС!');
@@ -375,6 +401,9 @@
             }, 1500);
         }
 
+        // ================================================================
+        // 5. TOAST
+        // ================================================================
         let toastTimeout;
 
         function showToast(message) {
@@ -389,6 +418,9 @@
             }, 3000);
         }
 
+        // ================================================================
+        // 6. ENTER ДЛЯ ОТПРАВКИ
+        // ================================================================
         document.querySelectorAll('.prompt-input').forEach(input => {
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
@@ -400,6 +432,9 @@
             });
         });
 
+        // ================================================================
+        // 7. ПРИВЕТСТВИЕ
+        // ================================================================
         setTimeout(() => {
             showToast(`Добро пожаловать, ${userName}!`);
         }, 500);
