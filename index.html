@@ -293,7 +293,7 @@
         <div class="prompt-section">
             <label>Опиши аватар (промпт)</label>
             <textarea class="prompt-input" id="avatarPrompt" placeholder="Например: красивый закат на пляже, стиль арт, 4k..."></textarea>
-            <button class="btn-generate" onclick="generateImage('avatar')">🚀 Сгенерировать аватар</button>
+            <button class="btn-generate" onclick="generateImage('avatar')">Сгенерировать аватар</button>
         </div>
     </div>
 
@@ -302,7 +302,7 @@
         <div class="prompt-section">
             <label>Опиши изображение (промпт)</label>
             <textarea class="prompt-input" id="previewPrompt" placeholder="Например: космический корабль в стиле киберпанк, 4k..."></textarea>
-            <button class="btn-generate" onclick="generateImage('preview')">🚀 Сгенерировать превью</button>
+            <button class="btn-generate" onclick="generateImage('preview')">Сгенерировать превью</button>
         </div>
     </div>
 
@@ -311,7 +311,7 @@
         <div class="prompt-section">
             <label>Опиши карточку (промпт)</label>
             <textarea class="prompt-input" id="cardPrompt" placeholder="Например: визитка для бизнеса, минимализм, элегантно..."></textarea>
-            <button class="btn-generate" onclick="generateImage('card')">🚀 Сгенерировать карточку</button>
+            <button class="btn-generate" onclick="generateImage('card')">Сгенерировать карточку</button>
         </div>
     </div>
 
@@ -415,7 +415,7 @@
                 showToast('✅ Результат отправлен в ЛС!');
 
                 if (btn) {
-                    btn.textContent = `🚀 Сгенерировать ${type === 'avatar' ? 'аватар' : type === 'preview' ? 'превью' : 'карточку'}`;
+                    btn.textContent = `Сгенерировать ${type === 'avatar' ? 'аватар' : type === 'preview' ? 'превью' : 'карточку'}`;
                     btn.disabled = false;
                 }
 
