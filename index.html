@@ -245,20 +245,14 @@
         <div class="avatar" id="avatarDisplay">👤</div>
         <div class="user-info">
             <h1 id="userName">Добро пожаловать!</h1>
-            <p>UnSkippable Generator</p>
+            <p>UnSkipped Generator</p>
         </div>
     </div>
 
     <div class="tabs">
-        <button class="tab active" data-tab="avatar">
-            Аватар
-        </button>
-        <button class="tab" data-tab="preview">
-            Превью
-        </button>
-        <button class="tab" data-tab="cards">
-            Карточки
-        </button>
+        <button class="tab active" data-tab="avatar">Аватар</button>
+        <button class="tab" data-tab="preview">Превью</button>
+        <button class="tab" data-tab="cards">Карточки</button>
     </div>
 
     <div class="tab-content active" id="tab-avatar">
@@ -304,7 +298,7 @@
         document.getElementById('userName').textContent = `Добро пожаловать, ${userName}!`;
 
         const avatarDisplay = document.getElementById('avatarDisplay');
-        const initials = userName.charAt(0).toUpperCase() || '👤';
+        const initials = userName.charAt(0).toUpperCase() || 'A';
         avatarDisplay.textContent = initials;
 
         document.querySelectorAll('.tab').forEach(tab => {
@@ -355,8 +349,16 @@
             }
 
             setTimeout(() => {
+                // Отправляем данные боту
                 if (tg) {
-                    tg.sendData("1");
+                    tg.sendData(JSON.stringify({
+                        action: 'generate',
+                        type: type,
+                        typeName: typeName,
+                        prompt: prompt,
+                        user: userName,
+                        userId: userId
+                    }));
                 }
 
                 showToast('Результат отправлен в ЛС!');
