@@ -6,21 +6,14 @@
     <title>AI Generator</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             background: #0a0a0a;
             color: #ffffff;
             min-height: 100vh;
             padding: 20px;
-            padding-bottom: 100px;
         }
-
         .header {
             display: flex;
             align-items: center;
@@ -29,7 +22,6 @@
             border-bottom: 1px solid #1a1a1a;
             margin-bottom: 24px;
         }
-
         .avatar {
             width: 60px;
             height: 60px;
@@ -44,11 +36,7 @@
             flex-shrink: 0;
             box-shadow: 0 0 20px rgba(108, 92, 231, 0.3);
         }
-
-        .user-info {
-            flex: 1;
-        }
-
+        .user-info { flex: 1; }
         .user-info h1 {
             font-size: 20px;
             font-weight: 700;
@@ -57,13 +45,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
-        .user-info p {
-            font-size: 13px;
-            color: #888;
-            margin-top: 2px;
-        }
-
+        .user-info p { font-size: 13px; color: #888; margin-top: 2px; }
         .tabs {
             display: flex;
             gap: 10px;
@@ -72,7 +54,6 @@
             border-radius: 12px;
             padding: 6px;
         }
-
         .tab {
             flex: 1;
             padding: 12px 8px;
@@ -86,44 +67,24 @@
             transition: all 0.3s;
             text-align: center;
         }
-
         .tab.active {
             background: #6c5ce7;
             color: white;
             box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
         }
-
-        .tab:hover {
-            color: white;
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
+        .tab:hover { color: white; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
         .prompt-section {
             background: #141414;
             border-radius: 16px;
             padding: 20px;
             border: 1px solid #1a1a1a;
         }
-
         .prompt-section label {
             font-size: 14px;
             color: #888;
@@ -131,7 +92,6 @@
             margin-bottom: 10px;
             font-weight: 500;
         }
-
         .prompt-input {
             width: 100%;
             padding: 16px;
@@ -147,15 +107,8 @@
             font-family: inherit;
             line-height: 1.6;
         }
-
-        .prompt-input:focus {
-            border-color: #6c5ce7;
-        }
-
-        .prompt-input::placeholder {
-            color: #444;
-        }
-
+        .prompt-input:focus { border-color: #6c5ce7; }
+        .prompt-input::placeholder { color: #444; }
         .btn-generate {
             width: 100%;
             padding: 18px;
@@ -169,18 +122,8 @@
             transition: all 0.3s;
             margin-top: 16px;
         }
-
-        .btn-generate:hover {
-            transform: scale(0.98);
-            opacity: 0.9;
-        }
-
-        .btn-generate:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
+        .btn-generate:hover { transform: scale(0.98); opacity: 0.9; }
+        .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         .toast {
             position: fixed;
             bottom: 20px;
@@ -200,43 +143,15 @@
             max-width: 400px;
             margin: 0 auto;
         }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #0a0a0a;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #6c5ce7;
-            border-radius: 10px;
-        }
-
+        .toast.show { transform: translateY(0); opacity: 1; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #6c5ce7; border-radius: 10px; }
         @media (max-width: 480px) {
-            body {
-                padding: 14px;
-                padding-bottom: 90px;
-            }
-            .tab {
-                font-size: 12px;
-                padding: 10px 6px;
-            }
-            .prompt-input {
-                min-height: 100px;
-                font-size: 14px;
-                padding: 14px;
-            }
-            .btn-generate {
-                font-size: 15px;
-                padding: 16px;
-            }
+            body { padding: 14px; }
+            .tab { font-size: 12px; padding: 10px 6px; }
+            .prompt-input { min-height: 100px; font-size: 14px; padding: 14px; }
+            .btn-generate { font-size: 15px; padding: 16px; }
         }
     </style>
 </head>
@@ -284,86 +199,45 @@
     </div>
 
     <script>
-        // ================================================================
-        // 1. TELEGRAM ИНИЦИАЛИЗАЦИЯ
-        // ================================================================
         const tg = window.Telegram?.WebApp;
+        if (tg) { tg.ready(); tg.expand(); }
 
-        if (tg) {
-            tg.ready();
-            tg.expand();
-        }
-
-        // ================================================================
-        // 2. ДАННЫЕ ПОЛЬЗОВАТЕЛЯ
-        // ================================================================
         const user = tg?.initDataUnsafe?.user;
         const userName = user?.first_name || user?.username || 'Гость';
         const userId = user?.id || 'неизвестно';
 
         document.getElementById('userName').textContent = `Добро пожаловать, ${userName}!`;
+        document.getElementById('avatarDisplay').textContent = userName.charAt(0).toUpperCase() || 'A';
 
-        const avatarDisplay = document.getElementById('avatarDisplay');
-        const initials = userName.charAt(0).toUpperCase() || 'A';
-        avatarDisplay.textContent = initials;
-
-        // ================================================================
-        // 3. ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
-        // ================================================================
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', function() {
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
-
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                const target = document.getElementById(`tab-${this.dataset.tab}`);
-                if (target) target.classList.add('active');
+                document.getElementById(`tab-${this.dataset.tab}`).classList.add('active');
             });
         });
 
-        // ================================================================
-        // 4. ГЕНЕРАЦИЯ И ОТПРАВКА В ЛС
-        // ================================================================
         function generateImage(type) {
-            let prompt = '';
-            let typeName = '';
-
+            let prompt = '', typeName = '';
             if (type === 'avatar') {
                 prompt = document.getElementById('avatarPrompt').value.trim();
                 typeName = 'Аватар';
-                if (!prompt) {
-                    showToast('Введите описание аватара!');
-                    document.getElementById('avatarPrompt').focus();
-                    return;
-                }
+                if (!prompt) { showToast('Введите описание аватара!'); return; }
             } else if (type === 'preview') {
                 prompt = document.getElementById('previewPrompt').value.trim();
                 typeName = 'Превью';
-                if (!prompt) {
-                    showToast('Введите описание изображения!');
-                    document.getElementById('previewPrompt').focus();
-                    return;
-                }
+                if (!prompt) { showToast('Введите описание изображения!'); return; }
             } else if (type === 'card') {
                 prompt = document.getElementById('cardPrompt').value.trim();
                 typeName = 'Карточка';
-                if (!prompt) {
-                    showToast('Введите описание карточки!');
-                    document.getElementById('cardPrompt').focus();
-                    return;
-                }
+                if (!prompt) { showToast('Введите описание карточки!'); return; }
             }
 
             const btn = document.querySelector(`#tab-${type} .btn-generate`);
-            if (btn) {
-                btn.textContent = 'Генерация...';
-                btn.disabled = true;
-            }
+            if (btn) { btn.textContent = 'Генерация...'; btn.disabled = true; }
 
             setTimeout(() => {
-                // =====================================================
-                // ОТПРАВЛЯЕМ ДАННЫЕ БОТУ
-                // =====================================================
                 if (tg) {
                     tg.sendData(JSON.stringify({
                         action: 'generate',
@@ -373,71 +247,35 @@
                         user: userName,
                         userId: userId
                     }));
-                    
-                    console.log('Данные отправлены боту:', {
-                        action: 'generate',
-                        type: type,
-                        typeName: typeName,
-                        prompt: prompt,
-                        user: userName,
-                        userId: userId
-                    });
-                } else {
-                    console.error('Telegram WebApp не найден!');
-                    showToast('Ошибка: не удалось отправить данные');
                 }
-
                 showToast('Результат отправлен в ЛС!');
-
                 if (btn) {
                     btn.textContent = `Сгенерировать ${type === 'avatar' ? 'аватар' : type === 'preview' ? 'превью' : 'карточку'}`;
                     btn.disabled = false;
                 }
-
-                if (type === 'avatar') document.getElementById('avatarPrompt').value = '';
-                else if (type === 'preview') document.getElementById('previewPrompt').value = '';
-                else if (type === 'card') document.getElementById('cardPrompt').value = '';
-
+                document.getElementById(type === 'avatar' ? 'avatarPrompt' : type === 'preview' ? 'previewPrompt' : 'cardPrompt').value = '';
             }, 1500);
         }
 
-        // ================================================================
-        // 5. TOAST
-        // ================================================================
         let toastTimeout;
-
         function showToast(message) {
             const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toastMessage');
-            toastMessage.textContent = message;
+            document.getElementById('toastMessage').textContent = message;
             toast.classList.add('show');
-
             clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        // ================================================================
-        // 6. ENTER ДЛЯ ОТПРАВКИ
-        // ================================================================
         document.querySelectorAll('.prompt-input').forEach(input => {
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                     e.preventDefault();
-                    const parent = input.closest('.tab-content');
-                    const btn = parent?.querySelector('.btn-generate');
-                    if (btn) btn.click();
+                    input.closest('.tab-content').querySelector('.btn-generate')?.click();
                 }
             });
         });
 
-        // ================================================================
-        // 7. ПРИВЕТСТВИЕ
-        // ================================================================
-        setTimeout(() => {
-            showToast(`Добро пожаловать, ${userName}!`);
-        }, 500);
+        setTimeout(() => showToast(`Добро пожаловать, ${userName}!`), 500);
     </script>
 </body>
 </html>
